@@ -2,12 +2,19 @@ import express from 'express';
 import cors from 'cors';
 import fs from 'fs/promises';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const PORT = 3001;
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const distDir = path.join(__dirname, '..', 'dist');
+
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
+
+// Serve static frontend assets from the Vite build output
+app.use(express.static(distDir));
 
 const dataDir = path.join(process.cwd(), 'data');
 
@@ -52,6 +59,12 @@ app.post('/api/tournaments/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Failed to save tournament' });
   }
+});
+
+// SPA fallback: serve index.html for any route not matched by the API
+// This enables client-side routing via React Router
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(distDir, 'index.html'));
 });
 
 app.listen(PORT, () => {
