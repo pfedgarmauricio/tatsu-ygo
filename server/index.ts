@@ -63,7 +63,7 @@ app.post('/api/tournaments/:id', async (req, res) => {
 
 // SPA fallback: serve index.html for any route not matched by the API
 // This enables client-side routing via React Router
-app.get('*', (_req, res) => {
+app.use((_req, res) => {
   res.sendFile(path.join(distDir, 'index.html'));
 });
 
