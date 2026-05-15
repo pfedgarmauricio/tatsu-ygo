@@ -85,7 +85,6 @@ function simulateTournament(
   for (const match of matches) {
     if (match.isBye) continue;
 
-    const pairKey = [match.playerA, match.playerB].sort().join('-');
     if (!pairingMap.has(match.playerA)) {
       pairingMap.set(match.playerA, new Set());
     }
